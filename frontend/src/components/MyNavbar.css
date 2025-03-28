@@ -1,0 +1,83 @@
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: black; /* Black Background */
+    border-bottom: 2px solid white;
+    position: fixed; /* Fix Navbar at the Top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1050; /* Ensure Navbar is on top */
+}
+
+/* Brand Logo */
+.brand .brand-link {
+    text-decoration: none;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Navigation Links */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+/* Link Styling */
+.nav-link {
+    text-decoration: none;
+    color: white !important; /* Ensure Links Stay White */
+    font-size: 16px;
+}
+
+/* Active Link - Keep White */
+.navbar .nav-link.active {
+    color: white !important;
+}
+
+/* Remove Bootstrap's Default Active Color */
+.navbar {
+    --bs-navbar-active-color: white !important;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show Hamburger */
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: black;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+}
+
+/* Ensure Navbar does NOT affect page content */
+body {
+    padding-top: 60px; /* Push content down to avoid overlap */
+}
