@@ -17,7 +17,7 @@ const Conferences = () => {
 
   const fetchConferences = async () => {
     try {
-      const response = await axios.get("http://localhost:3003/conferences");
+      const response = await axios.get("http://localhost:5000/conferences");
       setConferences(response.data);
       setLoading(false);
     } catch (error) {
@@ -80,9 +80,9 @@ const Conferences = () => {
                 >
                   <div className="conf-card">
                     <img
-                      src={`http://localhost:4000/uploads/${conf.image}`}
+                      src={`http://localhost:5000/uploads/${conf.image}`}
                       alt={conf.title}
-                      className="conf-image"
+                      className="conf-image card-image-container"
                     />
                     <div className="card-body">
                       <h5 className="card-title">{conf.title}</h5>
@@ -115,10 +115,12 @@ const Conferences = () => {
                 <Modal.Title>{selectedConf.title}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
+                <div className="card-image-container">
                 <img
-                  src={`http://localhost:4000/uploads/${selectedConf.image}`}
+                  src={`http://localhost:5000/uploads/${selectedConf.image}`}
                   alt={selectedConf.title}
                 />
+                </div>
                 <p>
                   <span className="text-muted">{selectedConf.date}</span>
                 </p>

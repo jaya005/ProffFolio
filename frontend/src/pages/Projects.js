@@ -19,7 +19,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get("http://localhost:2000/projects");
+      const response = await axios.get("http://localhost:5000/projects");
       setProjects(response.data);
       setFilteredProjects(response.data);
       setLoading(false);
@@ -141,8 +141,9 @@ const Projects = () => {
               >
                 <div className="card-image-container">
                   <img
-                    src={`http://localhost:2000/uploads/${project.image}`}
+                    src={`http://localhost:5000/uploads/${project.image}`}
                     alt={project.name}
+                    
                   />
                   <div className="card-overlay">
                     <Button 
@@ -195,7 +196,7 @@ const Projects = () => {
               <Modal.Body>
                 <div className="modal-image-container">
                   <img
-                    src={`http://localhost:2000/uploads/${selectedProject.image}`}
+                    src={`http://localhost:5000/uploads/${selectedProject.image}`}
                     alt={selectedProject.name}
                   />
                 </div>

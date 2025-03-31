@@ -13,13 +13,13 @@ const sections = [
 ];
 
 const sectionPorts = {
-  achievements: 1000,
-  blogs: 4000,
+  achievements: 5000,
+  blogs: 5000,
   collaborations: 5000,
-  conferences: 3003,
-  experiences: 7000,
-  projects: 2000,
-  papers: 8000,
+  conferences: 5000,
+  experiences: 5000,
+  projects: 5000,
+  papers: 5000,
 };
 
 const UpdateItem = () => {

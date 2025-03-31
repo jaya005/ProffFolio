@@ -19,7 +19,7 @@ const Blog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/blogs");
+      const response = await axios.get("http://localhost:5000/blogs");
       setBlogs(response.data);
       setLoading(false);
     } catch (error) {
@@ -125,30 +125,33 @@ const Blog = () => {
           ) : filteredBlogs.length > 0 ? (
             filteredBlogs.map((blog, index) => (
               <motion.div
-                key={blog.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="blog-card"
-              >
-                <img
-                  src={`http://localhost:4000/uploads/${blog.image}`}
-                  alt={blog.title}
-                  className="blog-image"
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{blog.title}</h5>
-                  <p className="text-muted">{blog.date}</p>
-                  <p className="card-text">{blog.summary}</p>
-                  <Button 
-                    variant="primary" 
-                    onClick={() => handleReadMore(blog)}
-                    className="mt-auto"
-                  >
-                    Read More
-                  </Button>
-                </div>
-              </motion.div>
+  key={blog.id}
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: index * 0.1 }}
+  className="blog-card"
+>
+  <img
+    src={`http://localhost:5000/uploads/${blog.image}`}
+    alt={blog.title}
+    className="blog-image"
+  />
+  <div className="card-body">
+    <h5 className="card-title">{blog.title}</h5>
+    <p className="text-muted">{blog.date}</p>
+    <p className="card-text">
+      {blog.summary.length > 100 ? `${blog.summary.slice(0, 100)}...` : blog.summary}
+    </p>
+    <Button 
+      variant="primary" 
+      onClick={() => handleReadMore(blog)}
+      className="mt-auto"
+    >
+      Read More
+    </Button>
+  </div>
+</motion.div>
+
             ))
           ) : (
             <div className="error-message">
@@ -171,11 +174,12 @@ const Blog = () => {
               </Modal.Header>
               <Modal.Body>
                 <img
-                  src={`http://localhost:4000/uploads/${selectedBlog.image}`}
+                  src={`http://localhost:5000/uploads/${selectedBlog.image}`}
                   alt={selectedBlog.title}
+                  style={{height:"50%"}}
                 />
                 <p className="text-muted">{selectedBlog.date}</p>
-                <p>{selectedBlog.fullContent}</p>
+                <p>{selectedBlog.summary}</p>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={() => setShowModal(false)}>

@@ -28,12 +28,12 @@ const AdminDashboard = ({ setIsAuthenticated }) => {
     // Fetch data from the backend
     const fetchCounts = async () => {
       try {
-        const projects = await axios.get(`http://localhost:${2000}/count/projects`);
-        const publications = await axios.get(`http://localhost:${8000}/count/publications`);
-        const achievements = await axios.get(`http://localhost:${1000}/count/achievements`);
-        const conferences = await axios.get(`http://localhost:${3003}/count/conferences`);
+        const projects = await axios.get(`http://localhost:${5000}/count/projects`);
+        const publications = await axios.get(`http://localhost:${5000}/count/publications`);
+        const achievements = await axios.get(`http://localhost:${5000}/count/achievements`);
+        const conferences = await axios.get(`http://localhost:${5000}/count/conferences`);
         const collaborations = await axios.get(`http://localhost:${5000}/count/collaborations`);
-        const blogPosts = await axios.get(`http://localhost:${4000}/count/blogposts`);
+        const blogPosts = await axios.get(`http://localhost:${5000}/count/blogposts`);
 
         setCounts({
           projects: projects.data.count,

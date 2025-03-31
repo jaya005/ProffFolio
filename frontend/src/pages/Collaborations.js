@@ -79,7 +79,7 @@ const Collaborations = () => {
               >
                 <div className="image-container">
                   <img
-                    src={`http://localhost:4000/uploads/${collab.image}`}
+                    src={`http://localhost:5000/uploads/${collab.image}`}
                     alt={collab.name}
                     className="collab-image"
                   />
@@ -115,7 +115,7 @@ const Collaborations = () => {
               </Modal.Header>
               <Modal.Body>
                 <img
-                  src={`http://localhost:4000/uploads/${selectedCollab.image}`}
+                  src={`http://localhost:5000/uploads/${selectedCollab.image}`}
                   alt={selectedCollab.name}
                 />
                 <h5 className="mt-2">{selectedCollab.institution}</h5>
