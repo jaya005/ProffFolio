@@ -38,7 +38,7 @@ const DeleteItem = () => {
   const fetchItems = async () => {
     try {
       const response = await axios.get(
-        `https://profffolio-2.onrender.com/${selectedSection}`
+        `https://profffolio-4.onrender.com//${selectedSection}`
       );
       setItems(response.data);
     } catch (error) {
@@ -57,7 +57,7 @@ const DeleteItem = () => {
       console.log("Sending DELETE request for:", formattedName);
   
       const response = await axios.delete(
-        `https://profffolio-2.onrender.com/${selectedSection}/delete/${formattedName}`
+        `https://profffolio-4.onrender.com//${selectedSection}/delete/${formattedName}`
       );
   
       console.log("Delete response:", response.data);

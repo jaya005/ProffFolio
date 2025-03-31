@@ -55,7 +55,7 @@ const AddItem = () => {
     try {
       const fetchedData = {};
       for (let section of sections) {
-        const response = await axios.get(`https://profffolio-2.onrender.com/${selectedSection}`);
+        const response = await axios.get(`https://profffolio-4.onrender.com//${selectedSection}`);
         fetchedData[section] = response.data;
       }
       setData(fetchedData);
@@ -102,7 +102,7 @@ const AddItem = () => {
         console.log("Sending Data:", Object.fromEntries(formData.entries())); // Debugging
 
         const response = await axios.post(
-            `https://profffolio-2.onrender.com/${selectedSection}`,
+            `https://profffolio-4.onrender.com//${selectedSection}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
         );
