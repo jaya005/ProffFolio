@@ -2,13 +2,25 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+require("dotenv").config(); // Load environment variables
 
 const app = express();
 
-// Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/proffolio")
-  .then(() => console.log("Connected to MongoDB"))
-  .catch(err => console.error("MongoDB connection error:", err));
+// Connect to MongoDB using environment variable
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    process.exit(1); // Exit if unable to connect
+  }
+};
+
+connectDB(); // Call the function to connect
 
 // Enable CORS with high payload limit
 app.use(cors({ limit: "100mb" }));
@@ -39,7 +51,8 @@ app.use("/", projectsRoutes);
 app.use("/", researchRoutes);
 
 // Start Server
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-}); 
+  console.log(`Server running on port ${PORT}`);
+});
+
