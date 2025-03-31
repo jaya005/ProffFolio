@@ -19,7 +19,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/projects");
+      const response = await axios.get("https://profffolio-2.onrender.com/projects");
       setProjects(response.data);
       setFilteredProjects(response.data);
       setLoading(false);
@@ -141,7 +141,7 @@ const Projects = () => {
               >
                 <div className="card-image-container">
                   <img
-                    src={`http://localhost:5000/uploads/${project.image}`}
+                    src={`https://profffolio-2.onrender.com/uploads/${project.image}`}
                     alt={project.name}
                     
                   />
@@ -196,7 +196,7 @@ const Projects = () => {
               <Modal.Body>
                 <div className="modal-image-container">
                   <img
-                    src={`http://localhost:5000/uploads/${selectedProject.image}`}
+                    src={`https://profffolio-2.onrender.com/uploads/${selectedProject.image}`}
                     alt={selectedProject.name}
                   />
                 </div>

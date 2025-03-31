@@ -17,7 +17,7 @@ const Collaborations = () => {
 
   const fetchCollaborations = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/collaborations");
+      const response = await axios.get("https://profffolio-2.onrender.com/collaborations");
       setCollaborations(response.data);
       setLoading(false);
     } catch (error) {
@@ -79,7 +79,7 @@ const Collaborations = () => {
               >
                 <div className="image-container">
                   <img
-                    src={`http://localhost:5000/uploads/${collab.image}`}
+                    src={`https://profffolio-2.onrender.com/uploads/${collab.image}`}
                     alt={collab.name}
                     className="collab-image"
                   />
@@ -115,7 +115,7 @@ const Collaborations = () => {
               </Modal.Header>
               <Modal.Body>
                 <img
-                  src={`http://localhost:5000/uploads/${selectedCollab.image}`}
+                  src={`https://profffolio-2.onrender.com/uploads/${selectedCollab.image}`}
                   alt={selectedCollab.name}
                 />
                 <h5 className="mt-2">{selectedCollab.institution}</h5>
