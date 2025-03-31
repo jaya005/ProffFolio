@@ -2,22 +2,11 @@ const mongoose = require("mongoose");
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const cors = require("cors");
 const fs = require("fs");
-
-const app = express();
-
-// Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/proffolio")
-// Enable CORS with high payload limit
-app.use(cors({ limit: "100mb" }));
-
-// Middleware for JSON and URL-encoded data
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ limit: "100mb", extended: true }));
+const router = express.Router();
 
 // Serve static files (uploaded images)
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+router.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Mongoose Schema
 const achievementSchema = new mongoose.Schema({
@@ -42,7 +31,7 @@ const upload = multer({
 });
 
 // ✅ GET all achievements
-app.get("/achievements", async (req, res) => {
+router.get("/achievements", async (req, res) => {
   try {
     const achievements = await Achievement.find();
     res.json(achievements);
@@ -52,7 +41,7 @@ app.get("/achievements", async (req, res) => {
 });
 
 // ✅ POST a new achievement (with image upload)
-app.post("/achievements", upload.single("image"), async (req, res) => {
+router.post("/achievements", upload.single("image"), async (req, res) => {
   try {
     const { name, description } = req.body;
     const image = req.file ? req.file.filename : null;
@@ -67,7 +56,7 @@ app.post("/achievements", upload.single("image"), async (req, res) => {
 });
 
 // ✅ DELETE an achievement by ID
-app.get("/achievements/:name", async (req, res) => {
+router.get("/achievements/:name", async (req, res) => {
   try {
     const achievements = await Achievement.findOne({name:req.params.name});
     res.json(achievements);
@@ -75,7 +64,7 @@ app.get("/achievements/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.delete("/achievements/delete/:name", async (req, res) => {
+router.delete("/achievements/delete/:name", async (req, res) => {
   try {
     const achievement = await Achievement.findOneAndDelete({name:req.params.name});
     if (!achievement) {
@@ -95,7 +84,7 @@ app.delete("/achievements/delete/:name", async (req, res) => {
 });
 
 // ✅ UPDATE an achievement by ID
-app.put("/achievements/update/:name", upload.single("image"), async (req, res) => {
+router.put("/achievements/update/:name", upload.single("image"), async (req, res) => {
   try {
     // Find the achievement
     const achievement = await Achievement.findOne({ name: req.params.name });
@@ -130,13 +119,9 @@ app.put("/achievements/update/:name", upload.single("image"), async (req, res) =
     res.status(400).json({ error: error.message });
   }
 });
-app.get("/count/achievements", async (req, res) => {
+router.get("/count/achievements", async (req, res) => {
   const count = await Achievement.countDocuments();
   res.json({ count });
 });
+module.exports=router
 
-// Start Server
-const PORT = 1000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});

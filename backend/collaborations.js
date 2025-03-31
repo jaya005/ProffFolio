@@ -1,11 +1,8 @@
 const mongoose=require('mongoose')
-mongoose.connect(`mongodb://localhost:27017/proffolio`)
 const express = require("express");
 const multer=require('multer')
 const path = require("path");
-const app=express()
-const cors=require('cors')
-app.use(cors())
+const router = express.Router();
 const CollaborationSchema=new mongoose.Schema({
     name:String,
     institution:String,
@@ -13,8 +10,7 @@ const CollaborationSchema=new mongoose.Schema({
     image:String
 })
 const Collaboration=mongoose.model('Collaboration',CollaborationSchema)
-app.use(express.json())
-app.use(cors())
+
 const storage = multer.diskStorage({
     destination: "./uploads/",
     filename: (req, file, cb) => {
@@ -24,7 +20,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
 // GET all Collaborations
-app.get("/collaborations", async (req, res) => {
+router.get("/collaborations", async (req, res) => {
   try {
     const Collaborations = await Collaboration.find();
     res.json(Collaborations);
@@ -34,7 +30,7 @@ app.get("/collaborations", async (req, res) => {
 });
 
 // POST a new Collaboration
-app.post("/collaborations", upload.single("image"),async (req, res) => {
+router.post("/collaborations", upload.single("image"),async (req, res) => {
   try {
     const { name, institution,topic} = req.body;
     const image = req.file ? req.file.filename : null;
@@ -47,7 +43,7 @@ app.post("/collaborations", upload.single("image"),async (req, res) => {
 });
 
 // DELETE an Collaboration by ID
-app.delete("/collaborations/delete/:name", async (req, res) => {
+router.delete("/collaborations/delete/:name", async (req, res) => {
   try {
     await Collaboration.findOneAndDelete({name:req.params.name});
     res.json({ message: "Collaboration deleted" });
@@ -55,7 +51,7 @@ app.delete("/collaborations/delete/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.put("/collaborations/update/:name", upload.single("image"), async (req, res) => {
+router.put("/collaborations/update/:name", upload.single("image"), async (req, res) => {
   try {
     const { name,image, institution,topic} = req.body;  
     const updatedCollaborationData = {
@@ -82,11 +78,11 @@ app.put("/collaborations/update/:name", upload.single("image"), async (req, res)
     res.status(400).json({ error: error.message });
   }
 });
-app.get("/count/collaborations", async (req, res) => {
+router.get("/count/collaborations", async (req, res) => {
   const count = await Collaboration.countDocuments();
   res.json({ count });
 });
-app.get("/collaborations/:name", async (req, res) => {
+router.get("/collaborations/:name", async (req, res) => {
   try {
     const collaborations = await Collaboration.findOne({name:req.params.name});
     res.json(collaborations);
@@ -94,4 +90,4 @@ app.get("/collaborations/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.listen(5000)
+module.exports=router

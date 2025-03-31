@@ -1,13 +1,9 @@
 const mongoose=require('mongoose')
-mongoose.connect(`mongodb://localhost:27017/proffolio`)
 const express = require("express");
 const multer=require('multer')
 const path = require("path");
-
-const app=express()
-const cors=require('cors')
-app.use(cors())
-app.use("/uploads", express.static("uploads"));
+const router = express.Router();
+// router.use("/uploads", express.static("uploads"));
 
 const Paperschema=new mongoose.Schema({
     title:String,
@@ -16,7 +12,7 @@ const Paperschema=new mongoose.Schema({
     image:String
 })
 const Paper=mongoose.model('Paper',Paperschema)
-app.use(express.json())
+router.use(express.json())
 const storage = multer.diskStorage({
     destination: "./uploads/",
     filename: (req, file, cb) => {
@@ -26,7 +22,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
 // GET all Papers
-app.get("/Papers", async (req, res) => {
+router.get("/Papers", async (req, res) => {
   try {
     const Papers = await Paper.find();
     res.json(Papers);
@@ -36,7 +32,7 @@ app.get("/Papers", async (req, res) => {
 });
 
 // POST a new Paper
-app.post("/Papers", upload.single("image"),async (req, res) => {
+router.post("/Papers", upload.single("image"),async (req, res) => {
   try {
     const { title,description,category} = req.body;
     const image = req.file ? req.file.filename : null;
@@ -49,7 +45,7 @@ app.post("/Papers", upload.single("image"),async (req, res) => {
 });
 
 // DELETE an Paper by ID
-app.delete("/Papers/delete/:name", async (req, res) => {
+router.delete("/Papers/delete/:name", async (req, res) => {
   try {
     await Paper.findOneAndDelete({name:req.params.name});
     res.json({ message: "Paper deleted" });
@@ -57,7 +53,7 @@ app.delete("/Papers/delete/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.put("/Papers/update/:name", upload.single("image"), async (req, res) => {
+router.put("/Papers/update/:name", upload.single("image"), async (req, res) => {
   try {
     const { title,description,category,image} = req.body;  
     const updatedPaperData = {
@@ -84,11 +80,11 @@ app.put("/Papers/update/:name", upload.single("image"), async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-app.get("/count/publications", async (req, res) => {
+router.get("/count/publications", async (req, res) => {
   const count = await Paper.countDocuments();
   res.json({ count });
 });
-app.get("/papers/:name", async (req, res) => {
+router.get("/papers/:name", async (req, res) => {
   try {
     const papers = await Paper.findOne({title:req.params.name});
     res.json(papers);
@@ -96,4 +92,4 @@ app.get("/papers/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.listen(8000)
+module.exports=router

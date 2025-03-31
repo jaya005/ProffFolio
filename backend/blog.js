@@ -1,13 +1,10 @@
 const mongoose=require('mongoose')
-mongoose.connect(`mongodb://localhost:27017/proffolio`)
-const express = require("express");
 const multer=require('multer')
 const path = require("path");
+const express=require('express')
+const router = express.Router();
 
-const app=express()
-const cors=require('cors')
-app.use(cors())
-app.use("/uploads", express.static("uploads"));
+router.use("/uploads", express.static("uploads"));
 
 const blogSchema=new mongoose.Schema({
     title:String,
@@ -16,7 +13,7 @@ const blogSchema=new mongoose.Schema({
     date:Date
 })
 const blog=mongoose.model('blog',blogSchema)
-app.use(express.json())
+router.use(express.json())
 const storage = multer.diskStorage({
     destination: "./uploads/",
     filename: (req, file, cb) => {
@@ -27,7 +24,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
 // GET all blogs
-app.get("/blogs", async (req, res) => {
+router.get("/blogs", async (req, res) => {
   try {
     const blogs = await blog.find();
     res.json(blogs);
@@ -37,7 +34,7 @@ app.get("/blogs", async (req, res) => {
 });
 
 // POST a new blog
-app.post("/blogs", upload.single("image"),async (req, res) => {
+router.post("/blogs", upload.single("image"),async (req, res) => {
   try {
     const { title, summary,date} = req.body;
     const formattedDate = date ? new Date(date) : new Date();
@@ -51,7 +48,7 @@ app.post("/blogs", upload.single("image"),async (req, res) => {
 });
 
 // DELETE an blog by ID
-app.delete("/blogs/delete/:title", async (req, res) => {
+router.delete("/blogs/delete/:title", async (req, res) => {
   try {
     const deletedBlog = await blog.findOneAndDelete({ title: req.params.title });
     if (!deletedBlog) {
@@ -64,7 +61,7 @@ app.delete("/blogs/delete/:title", async (req, res) => {
 });
 
 // UPDATE a blog by ID
-app.put("/blogs/update/:name", upload.single("image"), async (req, res) => {
+router.put("/blogs/update/:name", upload.single("image"), async (req, res) => {
   try {
       const { title, summary, date } = req.body;
       const formattedDate = date ? new Date(date) : undefined;
@@ -96,11 +93,11 @@ app.put("/blogs/update/:name", upload.single("image"), async (req, res) => {
   }
 });
 
-  app.get("/count/blogposts", async (req, res) => {
+  router.get("/count/blogposts", async (req, res) => {
     const count = await blog.countDocuments();
     res.json({ count });
   });
-  app.get("/blogs/:name", async (req, res) => {
+  router.get("/blogs/:name", async (req, res) => {
     try {
       const blogs = await blog.findOne({title:req.params.name});
       res.json(blogs);
@@ -108,4 +105,4 @@ app.put("/blogs/update/:name", upload.single("image"), async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-app.listen(4000)
+  module.exports=router

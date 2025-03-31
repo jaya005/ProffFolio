@@ -1,11 +1,10 @@
 const mongoose=require('mongoose')
-mongoose.connect(`mongodb://localhost:27017/proffolio`)
 const express = require("express");
 const multer=require('multer')
 const path = require("path");
-const cors=require('cors')
-const app=express()
-app.use(cors())
+const router = express.Router();
+
+
 const projectSchema=new mongoose.Schema({
     name:String,
     institute:String,
@@ -13,8 +12,6 @@ const projectSchema=new mongoose.Schema({
     image:String
 })
 const Project=mongoose.model('Project',projectSchema)
-app.use(express.json({ limit: "100mb" })); 
-app.use(express.urlencoded({ limit: "100mb", extended: true }));
 const storage = multer.diskStorage({
     destination: "./uploads/",
     filename: (req, file, cb) => {
@@ -24,7 +21,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
 // GET all Projects
-app.get("/Projects", async (req, res) => {
+router.get("/Projects", async (req, res) => {
   try {
     const Projects = await Project.find();
     res.json(Projects);
@@ -33,10 +30,8 @@ app.get("/Projects", async (req, res) => {
   }
 });
 
-// POST a new Project
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.post("/Projects", upload.single("image"),async (req, res) => {
+router.post("/Projects", upload.single("image"),async (req, res) => {
   try {
     const { name, institute,topic} = req.body;
     const image = req.file ? req.file.filename : null;
@@ -49,7 +44,7 @@ app.post("/Projects", upload.single("image"),async (req, res) => {
 });
 
 // DELETE an Project by ID
-app.delete("/projects/delete/:name", async (req, res) => {
+router.delete("/projects/delete/:name", async (req, res) => {
   try {
     const name = decodeURIComponent(req.params.name);
     console.log("Received DELETE request for:", name);
@@ -72,7 +67,7 @@ app.delete("/projects/delete/:name", async (req, res) => {
 });
 
 // UPDATE a Project by ID
-app.put("/Projects/update/:name", upload.single("image"), async (req, res) => {
+router.put("/Projects/update/:name", upload.single("image"), async (req, res) => {
     try {
       const { name,image,institute,topic } = req.body;  
       const updatedProjectData = {
@@ -99,11 +94,11 @@ app.put("/Projects/update/:name", upload.single("image"), async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   });
-  app.get("/count/projects", async (req, res) => {
+  router.get("/count/projects", async (req, res) => {
     const count = await Project.countDocuments();
     res.json({ count });
   });
-  app.get("/projects/:name", async (req, res) => {
+  router.get("/projects/:name", async (req, res) => {
     try {
       const projects = await Project.findOne({name:req.params.name});
       res.json(projects);
@@ -111,12 +106,4 @@ app.put("/Projects/update/:name", upload.single("image"), async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-  
-  // Add similar endpoints for projects, Collaborations, BlogPosts, etc.
-  // const projects = await axios.get("/api/count/projects");
-  // const publications = await axios.get("/api/count/publications");
-  // const projects = await axios.get("/api/count/projects");
-  // const conferences = await axios.get("/api/count/conferences");
-  // const collaborations = await axios.get("/api/count/collaborations");
-  // const blogPosts = await axios.get("/api/count/blogposts");  
-app.listen(2000)
+  module.exports=router

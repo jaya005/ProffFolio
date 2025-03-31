@@ -1,22 +1,19 @@
 const mongoose=require('mongoose')
-mongoose.connect(`mongodb://localhost:27017/proffolio`)
 const express = require("express");
 const multer=require('multer')
 const path = require("path");
+const router = express.Router();
 
-const app=express()
-const cors=require('cors')
-app.use(cors())
 const expSchema=new mongoose.Schema({
     name:String,
     institute:String,
     topic:String,
     image:String
 })
-app.use("/uploads", express.static("uploads"));
+router.use("/uploads", express.static("uploads"));
 
 const Experience=mongoose.model('Experience',expSchema)
-app.use(express.json())
+router.use(express.json())
 const storage = multer.diskStorage({
     destination: "./uploads/",
     filename: (req, file, cb) => {
@@ -26,7 +23,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
 // GET all experiences
-app.get("/experiences", async (req, res) => {
+router.get("/experiences", async (req, res) => {
   try {
     const experiences = await Experience.find();
     res.json(experiences);
@@ -36,7 +33,7 @@ app.get("/experiences", async (req, res) => {
 });
 
 // POST a new Experience
-app.post("/experiences", upload.single("image"), async (req, res) => {
+router.post("/experiences", upload.single("image"), async (req, res) => {
   try {
     console.log(req.body); // Debugging: Check what is actually received in req.body
 
@@ -57,7 +54,7 @@ app.post("/experiences", upload.single("image"), async (req, res) => {
 
 
 // DELETE an Experience by ID
-app.delete("/experiences/delete/:name", async (req, res) => {
+router.delete("/experiences/delete/:name", async (req, res) => {
   try {
     await Experience.findOneAndDelete({name:req.params.name});
     res.json({ message: "Experience deleted" });
@@ -65,7 +62,7 @@ app.delete("/experiences/delete/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.put("/experiences/update/:name", upload.single("image"), async (req, res) => {
+router.put("/experiences/update/:name", upload.single("image"), async (req, res) => {
   try {
     const { name,institute,topic,image} = req.body;  
     const updatedExperienceData = {
@@ -92,7 +89,7 @@ app.put("/experiences/update/:name", upload.single("image"), async (req, res) =>
     res.status(400).json({ error: error.message });
   }
 });
-app.get("/experiences/:name", async (req, res) => {
+router.get("/experiences/:name", async (req, res) => {
   try {
     const experiences = await Experience.findOne({name:req.params.name});
     res.json(experiences);
@@ -100,4 +97,5 @@ app.get("/experiences/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.listen(7000)
+
+module.exports=router
